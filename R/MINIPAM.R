@@ -1,28 +1,26 @@
 #' minipam
 #'
-#' @description Ttake as input a csv dataframe containing output
+#' @description take as input a csv dataframe containing output
 #' of the minipam. For ETR and FvFm measurements only. And return
 #' clean files containing each type of measurements + the ETR curves.
 #'
-#' @param Name_of_the_input_file a character string, name of the csv input.
-#' @param input_path the path leading to the input file and where the final
-#' dataframes will be save.
+#' @param Name_of_the_input_file a character string (or vector), name of the csv input.
+#' @param input_path the path leading to the input file.
 #' @param output_path the path where you want to have the graphs stored.
-#'
 #' @return dataframes and graphs.
 #' @export
-#'
-#' @examples
-#' MINIPAM_THESE("Minipam_1.csv")
-#'
+#' @importFrom stats coef lm na.omit
+#' @importFrom utils head read.csv2 tail write.csv write.csv2
+#' @importFrom magrittr %<>% %>%
+#' @import ggplot2
 minipam <-
   function(Name_of_the_input_file,
            input_path = "C:/Users/trist/AppData/Local/ProjetsR/Greenhouse_Holobrom/MiniPam/data",
            output_path = "C:/Users/trist/AppData/Local/ProjetsR/Greenhouse_Holobrom/MiniPam/data/graph") {
 
     mypath <- output_path
-    setwd(dir = wd)
-    my_data<-read.csv2(Name_of_the_input_file, header=TRUE,skip=1)
+    setwd(dir = input_path)
+    my_data<- read.csv2(Name_of_the_input_file, header=TRUE,skip=1)
     #skip first row, as it is useless
 
     #Separate two files#####
@@ -129,7 +127,7 @@ minipam <-
       # one last cut to keep values of interest
 
       # Save the file #####
-      setwd(paste0(wd,"/results"))
+      setwd(paste0(input_path,"/results"))
       name<-paste(FvFmfinal$REC[1],"_a_",FvFmfinal$REC[nrow(FvFmfinal)],".csv")
       write.csv2(FvFmfinal, name, row.names = F)
     }
@@ -142,8 +140,6 @@ minipam <-
 
     # Clean the file ######
     if(dim(dataRLC)[1]!=0){
-      library(magrittr)
-      library(tidyverse)
       # Each RLC measure has a start "SLC Start" and an end "SLC end"
       # here we will put a number for each measure of RLC in the order
       # they appear (i.e. in the chronological order). From 1 to the
@@ -391,7 +387,7 @@ minipam <-
             reshape2::melt(id.vars = "PAR", value.name = "ETR", variable.name = "data_type")
 
 
-          g <- dat %>% ggplot(aes(x=PAR,y=ETR,color=data_type))+
+          g <- dat %>% ggplot2::ggplot(aes(x=PAR,y=ETR,color=data_type))+
             geom_line()+
             # plot lines
             ggtitle(label=titre)+
