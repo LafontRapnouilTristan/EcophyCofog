@@ -9,15 +9,11 @@ Authors@R:
            comment = c(ORCID = "YOUR-ORCID-ID"))
 Description: Take raw ecophysio devices output and transform it into R
     friendly datafiles.
-License: GPL-3)
+License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
-Imports: magrittr, readr, ggplot2, reshape2, dplyr, BBmisc, stats, utils
-Suggests: 
-    rmarkdown,
-    knitr,
-    testthat (>= 3.0.0)
-Config/testthat/edition: 3
-VignetteBuilder: knitr
+Imports: magrittr, readr, ggplot2, reshape2, dplyr, BBmisc, stats, utils, readxl,qpdf
+
+
