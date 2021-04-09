@@ -9,12 +9,14 @@ merge_ciras(
 )
 }
 \arguments{
-\item{path_to_xls}{a character string with your path to all your ciras xls output
-their name must always end as _treatment_sampleID.xls (e.g. CIRAS_3_Aechmea m _DP_1.xls)}
+\item{path_to_xls}{a character string with your path to all your ciras xls output.
+their name must always end as _treatment_sampleID.xls (e.g. CIRAS_3_Aechmea m _DP_1.xls).}
 }
 \value{
 csv individual and merged frames. Full and reducted to relevant variables.
 }
 \description{
-merge_ciras
+get all xls ciras output from a directory and transform them into
+csv in a 'csv' subfolder. Additionally bind them into to files (one complete, one
+with only relevant variables) in a 'final' subfolder.
 }
