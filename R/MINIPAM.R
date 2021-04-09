@@ -12,7 +12,8 @@
 #' @importFrom stats coef lm na.omit
 #' @importFrom utils head read.csv2 tail write.csv write.csv2
 #' @importFrom magrittr %<>% %>%
-#' @import ggplot2
+#' @import ggplot2 dplyr
+#'
 minipam <-
   function(Name_of_the_input_file,
            input_path = "C:/Users/trist/AppData/Local/ProjetsR/Greenhouse_Holobrom/MiniPam/data",
