@@ -6,6 +6,8 @@
 #'
 #' @param path_to_xls a character string with your path to all your ciras xls output.
 #' their name must always end as _treatment_sampleID.xls (e.g. CIRAS_3_Aechmea m _DP_1.xls).
+#' @param skip a integer indicating the number of useless rows at the top of your xls file, Jean-Yves Goret
+#' actual template have three.
 #'
 #' @return csv individual and merged frames. Full and reducted to relevant variables.
 #' @export
@@ -13,7 +15,8 @@
 #' @importFrom readxl read_excel
 #' @importFrom readr read_delim
 #' @importFrom dplyr nth
-merge_ciras <- function(path_to_xls = "C:/Users/trist/AppData/Local/ProjetsR/Greenhouse_Holobrom/Ciras/clean"){
+merge_ciras <- function(path_to_xls,
+                        skip = 3){
 
   wd <- path_to_xls
   # set a path to the files you want to analyse
@@ -33,7 +36,7 @@ merge_ciras <- function(path_to_xls = "C:/Users/trist/AppData/Local/ProjetsR/Gre
   # convert xls into csv
   data_list_xls <- list.files(path = wd ,pattern=".xls")
   for (i in 1:length(data_list_xls)){
-    data_tempo <- readxl::read_excel(data_list_xls[i], skip=3)
+    data_tempo <- readxl::read_excel(data_list_xls[i], skip=skip)
     colnames(data_tempo)<- names
     write.csv(data_tempo, paste0(wd,"/csv/",BBmisc::explode(toString(data_list_xls[[i]]),sep = "[.]")[1],".csv"),row.names = F)
   }

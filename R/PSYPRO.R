@@ -23,8 +23,8 @@ psypro <-
            todaysdate = todays_date,
            lim = c(-3,2),
            ID_vec,
-           path_to_calibration = "C:/Users/trist/AppData/Local/ProjetsR/Greenhouse_Holobrom/Psypro/Test/Calib juillet 2020.csv",
-           psypro_output = "C:/Users/trist/AppData/Local/ProjetsR/Greenhouse_Holobrom/Psypro/data/") {
+           path_to_calibration ,
+           psypro_output) {
 
     The_path_to_calibration <- path_to_calibration
     # The path that lead to the file containing the sensor's calibration of your psypro sensor

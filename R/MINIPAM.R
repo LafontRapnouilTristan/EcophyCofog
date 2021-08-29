@@ -6,7 +6,6 @@
 #'
 #' @param Name_of_the_input_file a character string (or vector), name of the csv input.
 #' @param input_path the path leading to the input file.
-#' @param output_path the path where you want to have the graphs stored.
 #' @return dataframes and graphs.
 #' @export
 #' @importFrom stats coef lm na.omit
@@ -16,12 +15,12 @@
 #'
 minipam <-
   function(Name_of_the_input_file,
-           input_path = "C:/Users/trist/AppData/Local/ProjetsR/Greenhouse_Holobrom/MiniPam/data",
-           output_path = "C:/Users/trist/AppData/Local/ProjetsR/Greenhouse_Holobrom/MiniPam/data/graph") {
+           input_path) {
+    ifelse(!dir.exists(file.path(input_path, paste0("results"))), dir.create(file.path(input_path, paste0("results"))), FALSE)
+    ifelse(!dir.exists(file.path(input_path, paste0("graph"))), dir.create(file.path(input_path, paste0("graph"))), FALSE)
 
-    mypath <- output_path
-    setwd(dir = input_path)
-    my_data<- read.csv2(Name_of_the_input_file, header=TRUE,skip=1)
+    output_path <- paste0(input_path,"/graph")
+    my_data<- read.csv2(paste0(input_path,"/",Name_of_the_input_file), header=TRUE,skip=1)
     #skip first row, as it is useless
 
     #Separate two files#####
@@ -128,13 +127,9 @@ minipam <-
       # one last cut to keep values of interest
 
       # Save the file #####
-      setwd(paste0(input_path,"/results"))
       name<-paste(FvFmfinal$REC[1],"_a_",FvFmfinal$REC[nrow(FvFmfinal)],".csv")
-      write.csv2(FvFmfinal, name, row.names = F)
+      write.csv2(FvFmfinal,paste0(input_path,"/results/", name), row.names = F)
     }
-
-
-
 
     #### Create RLC file ####
 
@@ -399,8 +394,8 @@ minipam <-
             annotate(geom="text", x=1000, y=5, label=ajout2,
                      color="black")
           # add PARmax and S? values
-          ggsave(filename = paste0(titre,'.jpg'), plot = g, device = "jpg", path = mypath)
-          #Save a pdf in the predefined "mypath
+          ggsave(filename = paste0(titre,'.jpg'), plot = g, device = "jpg", path = output_path)
+          #Save a pdf
         }
         else{
           i<-i+1
@@ -474,6 +469,6 @@ minipam <-
       name<-paste(dataRLCf$Date[1],"_",dataRLCf$Time[1],"_a_",dataRLCf$Date[nrow(dataRLCf)],"_",dataRLCf$Time[nrow(dataRLCf)],".csv")
       name<-gsub(":","_",name)
       name<-gsub("/","_",name)
-      write.csv2(dataRLCf, name, row.names = F)
+      write.csv2(dataRLCf,paste0(input_path,"/results/", name), row.names = F)
     }
   }
