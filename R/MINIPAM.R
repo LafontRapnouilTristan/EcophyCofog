@@ -27,7 +27,7 @@ minipam <-
     mysmalldata<-my_data[2:nrow(my_data),2:11]
     mysmalldata%<>%mutate(as.Date(Date))
     #cut off the first row and column (useless metadata)
-    mysmalldata<-cbind(mysmalldata,y = rep(0,nrow(mysmalldata)))
+    mysmalldata %<>% mutate(y = 0)
     # create a vector y of a length equal to the length
     # of your frame, filled with 0. Will be used to index
     # your rows and sort them.
@@ -55,7 +55,7 @@ minipam <-
         mysmalldata$y[i]<-1
         i<-i+1
       }
-      # When we reach the en of the light curve "SLCE" put a 1
+      # When we reach the end of the light curve "SLCE" put a 1
       else {
         i=i+1
       }
@@ -64,8 +64,8 @@ minipam <-
 
     # Split the data in FvFm and RLC results####
     #the split is done accordingly to the index of y
-    dataFvFm<<-subset(mysmalldata, mysmalldata$y!=1)
-    dataRLC<<-subset(mysmalldata, mysmalldata$y!=0)
+    dataFvFm <<- mysmalldata %>% filter(y!=1)
+    dataRLC <<- mysmalldata %>% filter(y!=0)
     data_list <<- list(dataFvFm,dataRLC)
 
     ## Create FvFm file ####
@@ -97,7 +97,7 @@ minipam <-
       }
 
       # Removing useless rows #####
-      dataFvFm<-subset(dataFvFm, dataFvFm$y!=1)
+      dataFvFm<-dataFvFm %>% filter(y!=1)
       # keep rows with y different from 0
       dataFvFmred<-dataFvFm[,c(5:7,9)]
       # Remove some columns

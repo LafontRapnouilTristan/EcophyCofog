@@ -31,8 +31,8 @@ psypro <-
     The_path_to_psypro_output <- paste0(psypro_output,todaysdate,"/",usedset)
     # The path to the file containing psypro output you want to analyze
     # This file should have 16 files. 2 per sensor of the psypro
-    dir.create(paste0(psypro_output,todaysdate,"/",usedset,"/graph"))
-    The_path_to_save_the_graphics <-paste0(psypro_output,todaysdate,"/",usedset,"/graph")
+    ifelse(!dir.exists(file.path(The_path_to_psypro_output, paste0("/graph"))), dir.create(file.path(The_path_to_psypro_output, paste0("/graph"))), FALSE)
+    The_path_to_save_the_graphics <-paste0(The_path_to_psypro_output,"/graph")
 
     setwd(The_path_to_psypro_output)
     # Set the working directory
@@ -117,7 +117,7 @@ psypro <-
         ggplot2::ggtitle ( label = paste0("sensor_",b,"  Pos_",i))
       ggplot2::ggsave(filename = paste0("sensor_",i,'_non_standard.jpg'), plot = g2, device = "jpg", path = The_path_to_save_the_graphics)
       # Plot psy against the time in sec
-      assign(paste0("curve_sensor_",i),a[2:5,]) # take the 2 to 5 points of the curve (is it enough??)
+      assign(paste0("curve_sensor_",i),a[2:5,]) # take the 2nd to 5th points of the curve (is it enough??)
 
     }
 

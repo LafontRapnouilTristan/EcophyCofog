@@ -48,7 +48,6 @@ merge_ciras <- function(path_to_xls,
   data_list_f <- list()
   for(i in 1:length(data_list)) {
     data_list_f[[i]] <-readr::read_delim(file = data_list[[i]],",", escape_double = FALSE, trim_ws = T)
-    # data_list_f[[i]] <- data_list_f[[i]][,1:35]
     Trtmt1 <- c(Trtmt1,dplyr::nth(BBmisc::explode(toString(data_list[[i]]),sep = "_"),-2L))
     id_plant1 <-c(id_plant1,BBmisc::explode(tail(BBmisc::explode(toString(data_list[[i]]),sep = "_"),1), sep = "[.]")[1])
   }
