@@ -26,6 +26,8 @@ psypro <-
            path_to_calibration ,
            psypro_output) {
 
+    todays_date <- Serie <- sec <- `psy uV` <- NULL
+
     The_path_to_calibration <- path_to_calibration
     # The path that lead to the file containing the sensor's calibration of your psypro sensor
     The_path_to_psypro_output <- paste0(psypro_output,todaysdate,"/",usedset)
