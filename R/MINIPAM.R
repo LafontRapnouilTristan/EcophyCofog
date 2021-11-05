@@ -16,6 +16,9 @@
 minipam <-
   function(Name_of_the_input_file,
            input_path) {
+
+    Date <- y <- data_list <- data_type <- PAR <- ETR <- NULL
+
     ifelse(!dir.exists(file.path(input_path, paste0("results"))), dir.create(file.path(input_path, paste0("results"))), FALSE)
     ifelse(!dir.exists(file.path(input_path, paste0("graph"))), dir.create(file.path(input_path, paste0("graph"))), FALSE)
 
