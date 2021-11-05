@@ -4,19 +4,12 @@
 \alias{minipam}
 \title{minipam}
 \usage{
-minipam(
-  Name_of_the_input_file,
-  input_path = "C:/Users/trist/AppData/Local/ProjetsR/Greenhouse_Holobrom/MiniPam/data",
- 
-    output_path = "C:/Users/trist/AppData/Local/ProjetsR/Greenhouse_Holobrom/MiniPam/data/graph"
-)
+minipam(Name_of_the_input_file, input_path)
 }
 \arguments{
 \item{Name_of_the_input_file}{a character string (or vector), name of the csv input.}
 
 \item{input_path}{the path leading to the input file.}
-
-\item{output_path}{the path where you want to have the graphs stored.}
 }
 \value{
 dataframes and graphs.

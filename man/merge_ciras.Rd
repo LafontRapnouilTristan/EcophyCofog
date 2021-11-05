@@ -4,13 +4,14 @@
 \alias{merge_ciras}
 \title{merge_ciras}
 \usage{
-merge_ciras(
-  path_to_xls = "C:/Users/trist/AppData/Local/ProjetsR/Greenhouse_Holobrom/Ciras/clean"
-)
+merge_ciras(path_to_xls, skip = 3)
 }
 \arguments{
 \item{path_to_xls}{a character string with your path to all your ciras xls output.
 their name must always end as _treatment_sampleID.xls (e.g. CIRAS_3_Aechmea m _DP_1.xls).}
+
+\item{skip}{a integer indicating the number of useless rows at the top of your xls file, Jean-Yves Goret
+actual template have three.}
 }
 \value{
 csv individual and merged frames. Full and reducted to relevant variables.
