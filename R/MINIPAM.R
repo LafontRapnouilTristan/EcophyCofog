@@ -4,8 +4,9 @@
 #' of the minipam. For ETR and FvFm measurements only. And return
 #' clean files containing each type of measurements + the ETR curves.
 #'
-#' @param Name_of_the_input_file a character string (or vector), name of the csv input.
+#' @param Name_of_the_input_file a character string (or vector), name of the csv input (if possible the output of merge_minipam).
 #' @param input_path the path leading to the input file.
+#' @param rec_vec a vector containing the REC id of the measurements you want to keep in the final frame. Default is NULL, it will keep all the measures from the original file.
 #' @return dataframes and graphs.
 #' @export
 #' @importFrom stats coef lm na.omit
@@ -15,15 +16,16 @@
 #'
 minipam <-
   function(Name_of_the_input_file,
-           input_path) {
+           input_path,
+           rec_vec = NULL) {
 
-    Date <- y <- data_list <- data_type <- PAR <- ETR <- NULL
+    Date <- y <- data_list <- data_type <- PAR <- ETR <- REC <- NULL
 
     ifelse(!dir.exists(file.path(input_path, paste0("results"))), dir.create(file.path(input_path, paste0("results"))), FALSE)
     ifelse(!dir.exists(file.path(input_path, paste0("graph"))), dir.create(file.path(input_path, paste0("graph"))), FALSE)
 
     output_path <- paste0(input_path,"/graph")
-    my_data<- read.csv2(paste0(input_path,"/",Name_of_the_input_file), header=TRUE,skip=1)
+    my_data<- read.csv2(paste0(input_path,"/",Name_of_the_input_file), header=TRUE)
     #skip first row, as it is useless
 
     #Separate two files#####
@@ -67,9 +69,9 @@ minipam <-
 
     # Split the data in FvFm and RLC results####
     #the split is done accordingly to the index of y
-    dataFvFm <<- mysmalldata %>% filter(y!=1)
-    dataRLC <<- mysmalldata %>% filter(y!=0)
-    data_list <<- list(dataFvFm,dataRLC)
+    dataFvFm <- mysmalldata %>% filter(y!=1)
+    dataRLC <- mysmalldata %>% filter(y!=0)
+    data_list <- list(dataFvFm,dataRLC)
 
     ## Create FvFm file ####
     if (nrow(dataFvFm !=0)){
@@ -87,7 +89,7 @@ minipam <-
       while (i<=nrow(dataFvFm)){
         if(dataFvFm$Type[i]=="C"){
           # for all C rows
-          dataFvFm$X1.Mark[i+1]<-dataFvFm$X1.Mark[i]
+          dataFvFm$Mark[i+1]<-dataFvFm$Mark[i]
           # Take the informations of the next row and put it
           # in the C row
           dataFvFm$y[i]<-1
@@ -115,10 +117,10 @@ minipam <-
 
       i<-1
       while (i <= nrow(dataFvFmred)){
-        char<-dataFvFmred$X1.Mark[i]
+        char<-dataFvFmred$Mark[i]
         char2<-toString(char)
         char3<-BBmisc::explode(char2,sep="\\ ")[3]
-        # extract the REC values from X1.Mark column
+        # extract the REC values from Mark column
         dataFvFmred$rec[i]<-char3
         # Fill the column REC with these values
         i=i+1
@@ -128,6 +130,10 @@ minipam <-
       colnames(FvFmfinal) <- c("REC","F","Fm","Y_II")
 
       # one last cut to keep values of interest
+      if (is.null(rec_vec)==F){
+        FvFmfinal %<>% filter(REC %in% rec_vec)
+      }
+
 
       # Save the file #####
       name<-paste(FvFmfinal$REC[1],"_a_",FvFmfinal$REC[nrow(FvFmfinal)],".csv")
@@ -135,7 +141,21 @@ minipam <-
     }
 
     #### Create RLC file ####
+    colnames(dataRLC) <- c("Date","Time","Type","No.","Mark","F","Fm","PAR","YII","ETR","date2","y")
+    dataRLC <- subset(dataRLC,dataRLC$YII!= "-")
+    assign("dataRLC",dataRLC, envir = .GlobalEnv)
+    #remove RLC failure (incomplete)
+    clean_vec <- NULL
+    for (i in 1:nrow(dataRLC)){
 
+      if (dataRLC$Type[i]=="SLCS"){
+        b <- ifelse(dataRLC$Type[i+1]!="REG1",0,1)
+      }
+      clean_vec <- c(clean_vec,b)
+    }
+    dataRLC$clean <- clean_vec
+    dataRLC %<>% filter(clean!=0)
+    assign("dataRLCclean",dataRLC, envir = .GlobalEnv)
 
     # Clean the file ######
     if(dim(dataRLC)[1]!=0){
@@ -170,6 +190,9 @@ minipam <-
       # Delete useless entries
       dataRLCred<-dataRLC[,c(1:3,5:11)]
 
+
+
+      assign("dataRLCred",dataRLCred, envir = .GlobalEnv)
 
       # Add columns to be filled #####
 
@@ -206,9 +229,9 @@ minipam <-
         # for all rows
         if(dataRLCf$Type[i]=="REG1"){
           # correponding to REG1
-          char<-dataRLCf$X1.Mark[i]
+          char<-dataRLCf$Mark[i]
           char2<-toString(char)
-          # consider X1.Mark content as character
+          # consider Mark content as character
           char3<-BBmisc::explode(char2,sep="\\ ")[3]
           char4<-BBmisc::explode(char3,sep=",")[1]
           # Extract the value from this string of character
@@ -243,7 +266,7 @@ minipam <-
         # As REG2 is the second row after SLCS we use
         # i-2 to fill the row.
         else if(dataRLCf$Type[i]=="REG2"){
-          char<-dataRLCf$X1.Mark[i]
+          char<-dataRLCf$Mark[i]
           char2<-toString(char)
           char3<-BBmisc::explode(char2,sep="\\ ")[3]
           char4<-BBmisc::explode(char3,sep=",")[1]
@@ -271,7 +294,9 @@ minipam <-
       # We thus can delete them
 
       # Computing ETR value according REG1 and 2 models ######
-
+      cols <- names(dataRLCf)[c(5:9,11:18)]
+      dataRLCf %<>% mutate(across(.cols=all_of(cols),.fns=as.numeric))
+      assign("dataRLCf",dataRLCf, envir = .GlobalEnv)
       #REG1 is taking in account the photoinhibition
       # the formula to compute it is in the Manual of the
       # MiniPAM II
@@ -289,12 +314,12 @@ minipam <-
             while (dataRLCf$Type[i]!="SLCE"){
               # otherwise, untill you reach the end of the LC
               b<-i+1
-              dataRLCf$REG1[b]<-as.numeric(dataRLCf$ETRmPot[a])*(1-exp(-((as.numeric(dataRLCf$alpha1[a])*dataRLCf$X1.PAR[b])/as.numeric(dataRLCf$ETRmPot[a]))))*exp(-((as.numeric(dataRLCf$beta[a])*dataRLCf$X1.PAR[b])/as.numeric(dataRLCf$ETRmPot[a])))
+              dataRLCf$REG1[b]<-as.numeric(dataRLCf$ETRmPot[a])*(1-exp(-((as.numeric(dataRLCf$alpha1[a])*dataRLCf$PAR[b])/as.numeric(dataRLCf$ETRmPot[a]))))*exp(-((as.numeric(dataRLCf$beta[a])*dataRLCf$PAR[b])/as.numeric(dataRLCf$ETRmPot[a])))
               # use the formula with the alpha1 for each PAR that the mimiPAM
               # tested. a is referring to the row containing the alpha value
               # and b is used to fetch each PAR value (13,from 0 to 3000)
               if (is.na(dataRLCf$alpha2[i])==FALSE){
-                dataRLCf$REG2[b]<-as.numeric(dataRLCf$ETRmax2[a])*tanh((as.numeric(dataRLCf$alpha2[a])*dataRLCf$X1.PAR[b])/as.numeric(dataRLCf$ETRmax2[a]))
+                dataRLCf$REG2[b]<-as.numeric(dataRLCf$ETRmax2[a])*tanh((as.numeric(dataRLCf$alpha2[a])*dataRLCf$PAR[b])/as.numeric(dataRLCf$ETRmax2[a]))
               }
               #We will now do the same but with the REG2 formula
               # from the MiniPAM II manual
@@ -306,7 +331,7 @@ minipam <-
         {i<-i+1}
       }
 
-
+      assign("dataRLCfETR",dataRLCf, envir = .GlobalEnv)
 
 
 
@@ -321,6 +346,7 @@ minipam <-
         else
         {i<-i+1}
       }
+      assign("dataRLCfPAR",dataRLCf, envir = .GlobalEnv)
       #Check the formulae
 
       # Which model fit the best our data ####
@@ -338,8 +364,8 @@ minipam <-
           # least square value is thus 0
           # For the FO
           b <- (i+1):(i+13)
-          moindre1<-sum(na.omit(((dataRLCf$REG1[b]-as.numeric(dataRLCf$X1.ETR[b]))^2)))
-          moindre2<-sum(na.omit(((dataRLCf$REG2[b]-as.numeric(dataRLCf$X1.ETR[b]))^2)))
+          moindre1<-sum(na.omit(((dataRLCf$REG1[b]-as.numeric(dataRLCf$ETR[b]))^2)))
+          moindre2<-sum(na.omit(((dataRLCf$REG2[b]-as.numeric(dataRLCf$ETR[b]))^2)))
           # For all the PAR value a one light curve (untill we reach SLCE, the end),
           # we compute the least square for REG1 and REG2 with the formula of the least square
           # the square of the difference between the observed values and
@@ -373,8 +399,8 @@ minipam <-
           ajout2<-paste("REG2 : S?=",round(dataRLCf$REG2[i-1],3)," PARmax=",round(dataRLCf$PARmax2[i-1],3))
           # The round values of least squares and PARmax of both models
           while(dataRLCf$Type[i]!="SLCE"){
-            x<-c(x,dataRLCf$X1.PAR[i])
-            z<-c(z,dataRLCf$X1.ETR[i])
+            x<-c(x,dataRLCf$PAR[i])
+            z<-c(z,dataRLCf$ETR[i])
             r1<-c(r1,dataRLCf$REG1[i])
             r2<-c(r2,dataRLCf$REG2[i])
             i=i+1
