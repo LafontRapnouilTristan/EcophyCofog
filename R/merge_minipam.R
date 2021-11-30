@@ -11,5 +11,5 @@ merge_minipam <- function(input_path,filename){
     a <- read.csv2(paste0(input_path,mini_list[i]), header = T,skip=1)
     big_data <- rbind(big_data,a)
   }
-  write.csv(big_data,file=paste0(input_path,filename,".csv"), row.names = F)
+  write.csv2(big_data,file=paste0(input_path,filename,".csv"), row.names = F)
 }
