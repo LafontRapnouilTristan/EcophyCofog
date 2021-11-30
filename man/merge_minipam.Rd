@@ -4,10 +4,12 @@
 \alias{merge_minipam}
 \title{merge_minipam}
 \usage{
-merge_minipam(input_path)
+merge_minipam(input_path, filename)
 }
 \arguments{
 \item{input_path}{character, the path to your minipam csv output to be merged}
+
+\item{filename}{character, the name of the merged output}
 }
 \value{
 a csv, row binding all the files contained it your input path
