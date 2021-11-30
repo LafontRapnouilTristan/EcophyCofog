@@ -26,6 +26,10 @@ minipam <-
 
     output_path <- paste0(input_path,"/graph")
     my_data<- read.csv2(paste0(input_path,"/",Name_of_the_input_file), header=TRUE)
+
+    if (ncol(my_data<5)){
+      my_data<- read.csv(paste0(input_path,"/",Name_of_the_input_file), header=TRUE)
+    }
     #skip first row, as it is useless
 
     #Separate two files#####
