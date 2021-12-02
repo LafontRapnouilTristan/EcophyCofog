@@ -399,8 +399,8 @@ minipam <-
           titre<-gsub(":","/",titre)
           titre<-gsub("/","_",titre)
           # Give a title to the graph
-          ajout<-paste("REG1 : S?=",round(dataRLCf$REG1[i-1],3)," PARmax=",round(dataRLCf$PARmax1[i-1],3))
-          ajout2<-paste("REG2 : S?=",round(dataRLCf$REG2[i-1],3)," PARmax=",round(dataRLCf$PARmax2[i-1],3))
+          ajout<-paste("REG1 : S=",round(dataRLCf$REG1[i-1],3)," PARmax=",round(dataRLCf$PARmax1[i-1],3))
+          ajout2<-paste("REG2 : S=",round(dataRLCf$REG2[i-1],3)," PARmax=",round(dataRLCf$PARmax2[i-1],3))
           # The round values of least squares and PARmax of both models
           while(dataRLCf$Type[i]!="SLCE"){
             x<-c(x,dataRLCf$PAR[i])
