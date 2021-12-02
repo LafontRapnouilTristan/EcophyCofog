@@ -10,7 +10,7 @@
 #' @return dataframes and graphs.
 #' @export
 #' @importFrom stats coef lm na.omit
-#' @importFrom utils head read.csv2 tail write.csv write.csv2
+#' @importFrom utils head read.csv2 tail write.csv write.csv2 read.csv
 #' @importFrom magrittr %<>% %>%
 #' @import ggplot2 dplyr
 #'
@@ -19,7 +19,7 @@ minipam <-
             input_path,
             path_to_ID_match) {
 
-  Date <- y <- data_list <- data_type <- PAR <- ETR <- REC <- NULL # create objects required by the function to avoid warning message
+  Date <- y <- data_list <- data_type <- PAR <- ETR <- REC <- Time <- clean <- ID <- NULL # create objects required by the function to avoid warning message
 
   ifelse(!dir.exists(file.path(input_path, paste0("results"))),
          dir.create(file.path(input_path, paste0("results"))),
