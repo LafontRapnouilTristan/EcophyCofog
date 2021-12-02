@@ -4,14 +4,14 @@
 \alias{minipam}
 \title{minipam}
 \usage{
-minipam(Name_of_the_input_file, input_path, rec_vec = NULL)
+minipam(Name_of_the_input_file, input_path, path_to_ID_match)
 }
 \arguments{
 \item{Name_of_the_input_file}{a character string (or vector), name of the csv input (if possible the output of merge_minipam).}
 
 \item{input_path}{the path leading to the input file.}
 
-\item{rec_vec}{a vector containing the REC id of the measurements you want to keep in the final frame. Default is NULL, it will keep all the measures from the original file.}
+\item{path_to_ID_match}{a csv file containing the measure ID, date, time and REC of the measure.}
 }
 \value{
 dataframes and graphs.
