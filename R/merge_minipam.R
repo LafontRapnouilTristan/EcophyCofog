@@ -9,6 +9,9 @@ merge_minipam <- function(input_path,filename){
   big_data <- NULL
   for( i in 1:length(mini_list)){
     a <- read.csv2(paste0(input_path,mini_list[i]), header = T,skip=1)
+    if (ncol(a)<2){
+      my_data<- read.csv(paste0(input_path,mini_list[i]), header = T,skip=1)
+    }
     big_data <- rbind(big_data,a)
   }
   write.csv2(big_data,file=paste0(input_path,filename,".csv"), row.names = F)
