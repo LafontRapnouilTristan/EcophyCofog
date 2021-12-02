@@ -4,12 +4,16 @@
 \alias{PASCO_transfo}
 \title{PASCO data transformation for gasfluxes package}
 \usage{
-PASCO_transfo(data_pasco, ech)
+PASCO_transfo(data_pasco, ech, A, V)
 }
 \arguments{
 \item{data_pasco}{a csv file output of sparkview (PASCO app).}
 
 \item{ech}{a character vector of the sample ID, must be ordered as it was in the sparkview app!!!}
+
+\item{A}{area of a cross section of the chamber used for measurements (check units!!)}
+
+\item{V}{Volume of the chamber used for measurements (check units!!)}
 }
 \value{
 a csv file prepared for gasfluxes package

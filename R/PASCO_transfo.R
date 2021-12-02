@@ -2,6 +2,8 @@
 #'
 #' @param data_pasco a csv file output of sparkview (PASCO app).
 #' @param ech a character vector of the sample ID, must be ordered as it was in the sparkview app!!!
+#' @param A area of a cross section of the chamber used for measurements (check units!!)
+#' @param V Volume of the chamber used for measurements (check units!!)
 #'
 #' @return a csv file prepared for gasfluxes package
 #' @export
@@ -11,7 +13,9 @@
 #'
 PASCO_transfo <-
   function(data_pasco,
-           ech){
+           ech,
+           A,
+           V){
 
     Date_Time_stab <- Date_Time_RECO <- Date_Time_NEE <-
       Time_Stab <- Time_RECO <- Time_NEE <- Ech_ID <- Flux_type <-
@@ -115,8 +119,8 @@ PASCO_transfo <-
                                           Rec_ID=paste0(Ech_ID,"_",Flux_type),
                                           CO2_mg_m3=((CO2_ppm/1000)*44.01)/24.45,
                                           Date=data_pasco$Date[1],
-                                          A=1,
-                                          V=5
+                                          A=A,
+                                          V=V
     )
 
     gasfluxes_data_pasco <- dplyr::relocate(.data=gasfluxes_data_pasco,
