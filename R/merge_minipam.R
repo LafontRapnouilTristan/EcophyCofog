@@ -4,6 +4,7 @@
 #' @param filename character, the name of the merged output
 #' @return a csv, row binding all the files contained it your input path
 #' @export
+#' @importFrom utils read.csv2 read.csv
 merge_minipam <- function(input_path,filename){
   mini_list <- list.files(paste0(input_path),pattern = "csv")
   big_data <- NULL
