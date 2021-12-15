@@ -14,8 +14,8 @@
 PASCO_transfo <-
   function(data_pasco,
            ech,
-           A,
-           V){
+           A=1,
+           V=5){
 
     Date_Time_stab <- Date_Time_RECO <- Date_Time_NEE <-
       Time_Stab <- Time_RECO <- Time_NEE <- Ech_ID <- Flux_type <-
