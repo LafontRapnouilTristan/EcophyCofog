@@ -19,7 +19,7 @@ PASCO_transfo <-
 
     Date_Time_stab <- Date_Time_RECO <- Date_Time_NEE <-
       Time_Stab <- Time_RECO <- Time_NEE <- Ech_ID <- Flux_type <-
-        Date <- Time <- Rec_ID <- Time_h <- CO2_mg_m3 <- NULL
+        Date <- Time <- Rec_ID <- Time_h <- CO2_mg_m3 <- Probe <- probe_list <- NULL
 
     nb_ech <- length(ech)
     ncol_data <- c(1:(6+3*nb_ech))
@@ -35,8 +35,6 @@ PASCO_transfo <-
 
     co2_columns <- which(!(colnames(data_pasco)%in% colnames(data_pasco[,c(1,2,(3+nb_ech),(4+nb_ech),(5+(2*nb_ech)),6+(2*nb_ech))])))
 
-    colnames(data_pasco[co2_columns])
-
     for (i in which(1:length(co2_columns) %% nb_ech==0)){
 
       if (i<=nb_ech){
@@ -45,7 +43,7 @@ PASCO_transfo <-
       if (i>((2*nb_ech)+1)){
         colnames(data_pasco)[co2_columns][i:(i-nb_ech+1)] <- c(paste0("CO2_ppm_",ech[4:1],"_NEE"))
       }
-      if (i<nb_ech & i<((2*nb_ech)+1)){
+      if (i>nb_ech & i<((2*nb_ech)+1)){
         colnames(data_pasco)[co2_columns][i:(i-nb_ech+1)] <- c(paste0("CO2_ppm_",ech[4:1],"_RECO"))
       }
     }
@@ -65,7 +63,7 @@ PASCO_transfo <-
     CO2_ppm <- NULL
     j <- 1
     for (i in co2_columns){
-      CO2_ppm[j] <- na.omit(data_pasco[,i])
+      CO2_ppm[[j]] <- na.omit(data_pasco[,i])
       j <- j+1
     }
 
@@ -133,5 +131,12 @@ PASCO_transfo <-
                                             CO2_ppm,
                                             CO2_mg_m3
     )
+
+    proby <- NULL
+    for (i in 1:nrow(gasfluxes_data_pasco)){
+      proby_temp <- match(gasfluxes_data_pasco$Ech_ID[i],ech)
+      proby <- c(proby,proby_temp)
+    }
+    gasfluxes_data_pasco <- dplyr::mutate(gasfluxes_data_pasco,Probe=proby )
     return(gasfluxes_data_pasco)
   }
