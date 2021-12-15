@@ -4,7 +4,7 @@
 \alias{PASCO_transfo}
 \title{PASCO data transformation for gasfluxes package}
 \usage{
-PASCO_transfo(data_pasco, ech, A = 1, V = 5)
+PASCO_transfo(data_pasco, ech, A, V)
 }
 \arguments{
 \item{data_pasco}{a csv file output of sparkview (PASCO app).}
