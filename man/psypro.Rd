@@ -4,19 +4,10 @@
 \alias{psypro}
 \title{psypro}
 \usage{
-psypro(
-  usedset,
-  todaysdate = todays_date,
-  lim = c(-3, 2),
-  ID_vec,
-  path_to_calibration,
-  psypro_output
-)
+psypro(usedset, lim = c(-3, 2), ID_vec, path_to_calibration, psypro_output)
 }
 \arguments{
 \item{usedset}{the predetermined name of your set 0,1,2 or 3.}
-
-\item{todaysdate}{a character string dd_mm_yyyy format.}
 
 \item{lim}{min and max values expected out of the psypro for you
 samples. Used to standardized graphs for faster reading. Discuss with

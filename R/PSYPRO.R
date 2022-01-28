@@ -4,7 +4,6 @@
 #' mean water potential of your triplicate.
 #'
 #' @param usedset the predetermined name of your set 0,1,2 or 3.
-#' @param todaysdate a character string dd_mm_yyyy format.
 #' @param lim min and max values expected out of the psypro for you
 #' samples. Used to standardized graphs for faster reading. Discuss with
 #' lab members to understand!!
@@ -20,24 +19,22 @@
 #' @import ggplot2
 psypro <-
   function(usedset ,
-           todaysdate = todays_date,
            lim = c(-3,2),
            ID_vec,
            path_to_calibration ,
            psypro_output) {
 
-    todays_date <- Serie <- sec <- `psy uV` <- NULL
+    todaysdate <- Serie <- sec <- `psy uV` <- NULL
 
     The_path_to_calibration <- path_to_calibration
     # The path that lead to the file containing the sensor's calibration of your psypro sensor
-    The_path_to_psypro_output <- paste0(psypro_output,todaysdate,"/",usedset)
+    The_path_to_psypro_output <- paste0(psypro_output,"/",usedset)
     # The path to the file containing psypro output you want to analyze
     # This file should have 16 files. 2 per sensor of the psypro
     ifelse(!dir.exists(file.path(The_path_to_psypro_output, paste0("/graph"))), dir.create(file.path(The_path_to_psypro_output, paste0("/graph"))), FALSE)
     The_path_to_save_the_graphics <-paste0(The_path_to_psypro_output,"/graph")
 
-    setwd(The_path_to_psypro_output)
-    # Set the working directory
+
     CalibrationPsypro <- readr::read_delim(The_path_to_calibration, ";", escape_double = FALSE, trim_ws = TRUE)
     # get the excel file with wire's calibrations
 
@@ -101,7 +98,7 @@ psypro <-
 
 
     for (i in set$pos_sensor) { # For each sensor in your set
-      df <-readr::read_csv(paste0("P02_Ps#",i,"_50point.csv")) #load the sensor's data file
+      df <-readr::read_csv(paste0(The_path_to_psypro_output,"/P02_Ps#",i,"_50point.csv")) #load the sensor's data file
       assign(paste0("sensor_",i),tail(df[,5:6],50) )
       #renaming it and taking only "PsyuV" and "sec" columns and 50 last points
     }
@@ -123,20 +120,22 @@ psypro <-
 
     }
 
-
+    fitted_intercepts <- NULL
     Water_potential <- NULL # Create an empty vector to store Waterpot values
     for(i in 1:nrow(set)){ #for each sensor
       j <- set[i,6]
       b <- get(paste0("curve_sensor_",j)) # take the dots of the corresponding curve
-      Water_potential <- c(Water_potential,as.numeric(set[i,3])*coef(lm(b$`psy uV`~b$sec))[["(Intercept)"]]+as.numeric(set[i,4]))  }
-    #the water potential is sensor's slope*intercept of the lm + sensor's intercept
 
+      intercept_fit <- coef(lm(b$`psy uV`~b$sec))[["(Intercept)"]] # intercept of the fit on 2nd to fifth point
+
+      Water_potential <- c(Water_potential,as.numeric(set[i,3])*intercept_fit+as.numeric(set[i,4]))  }
+    #the water potential is sensor's slope*intercept of the lm + sensor's intercept
+      fitted_intercepts <- c(fitted_intercepts,intercept_fit)
     #Bind#####
 
-    data <- cbind(date = a2,time = a3,ID_plant = ID_vec,set[,c(1,2,6,3,4)],Water_potential,R2 = set[,5])
+    data <- cbind(date = a2,time = a3,ID_plant = ID_vec,set[,c(1,2,6,3,4,5)],fitted_intercept=fitted_intercepts ,Water_potential, calib_file = basename(path_to_calibration))
     # bind water pot values to the set dataframe, date and time column contain
     # value extracted and stored in a2 and a3
-
-    setwd("C:/Users/trist/AppData/Local/ProjetsR/Greenhouse_Holobrom/Psypro/Results")
-    write.csv(data, paste0("Z_Data_set_",usedset,"__",todaysdate,".csv"),row.names = F)
+    todaysdate <- stringr::str_replace_all(a2,"/","_")
+    write.csv(data, paste0(The_path_to_psypro_output,"/Z_Data_set_",usedset,"__",todaysdate,".csv"),row.names = F)
     }
