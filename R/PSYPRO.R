@@ -138,7 +138,13 @@ psypro <-
 
     #Bind#####
 
-    data <- cbind(date = a2,time = a3,ID_plant = ID_vec,set[,c(2,1,6,3,4,5)],fitted_intercept=fitted_intercepts ,Water_potential, calib_file = basename(path_to_calibration))
+    data <- cbind(date = a2,
+                  time = a3,
+                  ID_plant = ID_vec,set[,c(2,1,6,3,4,5)],
+                  fitted_intercept=fitted_intercepts
+                  ,Water_potential,
+                  calib_file = strsplit(basename(path_to_calibration),".",fixed = T)[1]
+                  )
     # bind water pot values to the set dataframe, date and time column contain
     # value extracted and stored in a2 and a3
     todaysdate <- stringr::str_replace_all(a2,"/","_")
