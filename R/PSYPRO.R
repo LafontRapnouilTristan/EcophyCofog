@@ -130,9 +130,12 @@ psypro <-
 
                          intercept_fit <- coef(lm(b$`psy uV`~b$sec))[["(Intercept)"]] # intercept of the fit on 2nd to fifth point
 
-                         Water_potential <- c(Water_potential,as.numeric(set[i,3])*intercept_fit+as.numeric(set[i,4]))  }
-                       #the water potential is sensor's slope*intercept of the lm + sensor's intercept
-                       fitted_intercepts <- c(fitted_intercepts,intercept_fit)
+                         Water_potential <- c(Water_potential,as.numeric(set[i,3])*intercept_fit+as.numeric(set[i,4]))
+                         #the water potential is sensor's slope*intercept of the lm + sensor's intercept
+                         fitted_intercepts <- c(fitted_intercepts,intercept_fit)
+                         }
+
+
                        #Bind#####
 
                        data <- cbind(date = a2,time = a3,ID_plant = ID_vec,set[,c(1,2,6,3,4,5)],fitted_intercept=fitted_intercepts ,Water_potential, calib_file = basename(path_to_calibration))
