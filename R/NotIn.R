@@ -9,6 +9,6 @@
 #' @export
 
 `%notin%` <- function(x,y){
-  x[!x %in% y]
+  !(x %in% y)
   }
 
