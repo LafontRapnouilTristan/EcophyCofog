@@ -1,17 +1,14 @@
-#' %notin%
-#' @description inverse of the %in% operator
-
-#' @rdname aliases
-#' @usage NULL
+#' NotIn
+#'
+#' @name %notin%
+#' @usage x \%notin\% y
+#' @param x vector to be tested
+#' @param y vectore to be tested against
+#' @description create an operator being the opposite of %in%
+#' @return notin operator
 #' @export
-is_in <- `%in%`
 
-#' @rdname aliases
-#' @usage NULL
-#' @export
-not_in <- `%in%`
-
-`%notin%` <- function(){
-  a <-`%in%`
-  Negate(a)
+`%notin%` <- function(x,y){
+  x[!x %in% y]
   }
+
