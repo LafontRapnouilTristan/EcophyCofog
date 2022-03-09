@@ -2,6 +2,7 @@
 
 export("%notin%")
 export(PASCO_transfo)
+export(PASCO_transfo2)
 export(merge_ciras)
 export(merge_minipam)
 export(minipam)
