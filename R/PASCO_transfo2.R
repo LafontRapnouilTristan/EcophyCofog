@@ -56,19 +56,9 @@ PASCO_transfo2 <- function(data,
   }
 
   co2_columns <- which(grepl("Concentration",colnames(data_pasco)))
-
-
-  for (i in which(1:length(co2_columns) %% nb_ech==0)){
-
-    if (i<=nb_ech){
-      colnames(data_pasco)[co2_columns][i:(i-nb_ech+1)] <- c(paste0("CO2_ppm_",ech[nb_ech:1],"_Stab"))
-    }
-    if (i>((2*nb_ech)+1)){
-      colnames(data_pasco)[co2_columns][i:(i-nb_ech+1)] <- c(paste0("CO2_ppm_",ech[nb_ech:1],"_NEE"))
-    }
-    if (i>nb_ech & i<((2*nb_ech)+1)){
-      colnames(data_pasco)[co2_columns][i:(i-nb_ech+1)] <- c(paste0("CO2_ppm_",ech[nb_ech:1],"_RECO"))
-    }
+  col_to_change<-split(co2_columns,sort(c(1:length(co2_columns))%%n_run))
+  for (i in 1:length(col_to_change)){
+    colnames(data_pasco)[col_to_change[[i]]] <- paste0("CO2_ppm_",ech,"_",name_run[i])
   }
 
   New_Col_Names <- paste0("Hour_time_",name_run)
@@ -89,6 +79,8 @@ PASCO_transfo2 <- function(data,
 
   position <- which(grepl("Time_s",colnames(data_pasco)))
   data_pasco <- dplyr::mutate(.data=data_pasco,
+                              dplyr::across(.cols = position,.fns = as.numeric))%>%
+                dplyr::mutate(.data=data_pasco,
                               dplyr::across(.cols = position,.fns = ~.x*(1/3600),.names = "hour_{.col}"))
 
   #get all CO2 measurements
