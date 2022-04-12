@@ -145,34 +145,6 @@ minipam <-
     dataRLC$clean <- clean_vec # add the clean vec to data
     dataRLC <- dataRLC %>% filter(clean != 0) # and filter the rows where it equals 1
 
-    # Each RLC measure has a start "SLC Start" and an end "SLC end"
-    # here we will put a number for each measure of RLC in the order
-    # they appear (i.e. in the chronological order). From 1 to the
-    # total number of measure in the file.
-
-    # i <- 1
-    # compt <- 0
-    # while (i <= nrow(dataRLC)) {
-    #   if (dataRLC$Type[i] == "SLCS") {
-    #     compt <- compt + 1
-    #     # if you have a start,it means that you are starting a new measure
-    #     # add one to the previous value.
-    #     dataRLC$y[i] <- compt
-    #     # count this measure
-    #     while (dataRLC$Type[i] != "SLCE") {
-    #       dataRLC$y[i] <- compt
-    #       i = i + 1
-    #     }
-    #     # same number for all the row between a start and an end
-    #     # then move to the next row
-    #   }
-    #   else if (dataRLC$Type[i] == "SLCE") {
-    #     dataRLC$y[i] <- compt
-    #     # you reach the end, count it
-    #     i = i + 1
-    #     # move to the next row
-    #   }
-    # }
 
     # Delete useless entries
     dataRLCred <- dataRLC[, c(1:3, 5:11)]
@@ -301,7 +273,7 @@ minipam <-
     dataRLCf[5:ncol(dataRLCf)] <- dataRLCf[5:ncol(dataRLCf)] %>% mutate_if(is.character,as.numeric)
 
     # combine with the idmatch file
-    dataRLCf <- left_join(dataRLCf,ID_match,by=c("Date","Time"))
+    dataRLCf <- left_join(dataRLCf,ID_match %<>% select(-REC),by=c("Date","Time"))
 
     # replace ID that are NA with 0
     dataRLCf <- mutate_at(dataRLCf, "ID", ~replace(., is.na(.), "0"))
@@ -322,7 +294,7 @@ minipam <-
     # place the ID in all rows
 
 
-    dataRLCf <- dataRLCf %>% filter(ID!=0) # get all the rows with with an ID (e.g. not 0)
+    dataRLCf <- dataRLCf %>% filter(ID!=0) # get all the rows with an ID (e.g. not 0)
 
 
     i <- 1 # create graph for each RLC
