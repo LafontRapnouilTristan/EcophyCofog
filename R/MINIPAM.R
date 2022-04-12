@@ -19,8 +19,12 @@ minipam <-
             input_path,
             path_to_ID_match) {
 
+# Set thingz up
+
+## objects
   Date <- y <- data_list <- data_type <- PAR <- ETR <- REC <- Time <- clean <- ID <- NULL # create objects required by the function to avoid warning message
 
+## output folders
   ifelse(!dir.exists(file.path(input_path, paste0("results"))),
          dir.create(file.path(input_path, paste0("results"))),
          FALSE)
@@ -30,7 +34,7 @@ minipam <-
 
   output_path <- paste0(input_path, "/graph") # create the path
 
-
+## import data
   my_data <- read.csv2(paste0(input_path, "/", Name_of_the_input_file), # read csv data file, change from csv2 to csv if needed
                        header = TRUE)
   if (ncol(my_data) < 2) {
@@ -38,7 +42,7 @@ minipam <-
                         header = TRUE)
   }
 
-
+## import idmatch file
   ID_match <- read.csv2(paste0(path_to_ID_match), # read csv rec/ID maatching file, change from csv2 to csv if needed
                         header = TRUE)
   if (ncol(ID_match) < 2) {
@@ -57,7 +61,7 @@ minipam <-
   mysmalldata <- mysmalldata %>% mutate(as.Date(Date)) # change date from character to date
   mysmalldata <- mysmalldata %>% mutate(y = 0) # create a variable that will be used to remove row
 
-
+## SPLIT FvFm from RLC data
   i <- 1
   while (i <= nrow(mysmalldata)) { # for every row in my data
     if (mysmalldata$Type[i] == "SLCS") { # if measure type is SLCS -> Light curve start
@@ -146,29 +150,29 @@ minipam <-
     # they appear (i.e. in the chronological order). From 1 to the
     # total number of measure in the file.
 
-    i <- 1
-    compt <- 0
-    while (i <= nrow(dataRLC)) {
-      if (dataRLC$Type[i] == "SLCS") {
-        compt <- compt + 1
-        # if you have a start,it means that you are starting a new measure
-        # add one to the previous value.
-        dataRLC$y[i] <- compt
-        # count this measure
-        while (dataRLC$Type[i] != "SLCE") {
-          dataRLC$y[i] <- compt
-          i = i + 1
-        }
-        # same number for all the row between a start and an end
-        # then move to the next row
-      }
-      else if (dataRLC$Type[i] == "SLCE") {
-        dataRLC$y[i] <- compt
-        # you reach the end, count it
-        i = i + 1
-        # move to the next row
-      }
-    }
+    # i <- 1
+    # compt <- 0
+    # while (i <= nrow(dataRLC)) {
+    #   if (dataRLC$Type[i] == "SLCS") {
+    #     compt <- compt + 1
+    #     # if you have a start,it means that you are starting a new measure
+    #     # add one to the previous value.
+    #     dataRLC$y[i] <- compt
+    #     # count this measure
+    #     while (dataRLC$Type[i] != "SLCE") {
+    #       dataRLC$y[i] <- compt
+    #       i = i + 1
+    #     }
+    #     # same number for all the row between a start and an end
+    #     # then move to the next row
+    #   }
+    #   else if (dataRLC$Type[i] == "SLCE") {
+    #     dataRLC$y[i] <- compt
+    #     # you reach the end, count it
+    #     i = i + 1
+    #     # move to the next row
+    #   }
+    # }
 
     # Delete useless entries
     dataRLCred <- dataRLC[, c(1:3, 5:11)]
@@ -296,8 +300,8 @@ minipam <-
     # change character asnumeric if needed
     dataRLCf[5:ncol(dataRLCf)] <- dataRLCf[5:ncol(dataRLCf)] %>% mutate_if(is.character,as.numeric)
 
-    # combine with the idmatch file, removing file that are not in REC
-    dataRLCf <- left_join(dataRLCf,ID_match %<>% select(-REC),by=c("Date","Time"))
+    # combine with the idmatch file
+    dataRLCf <- left_join(dataRLCf,ID_match,by=c("Date","Time"))
 
     # replace ID that are NA with 0
     dataRLCf <- mutate_at(dataRLCf, "ID", ~replace(., is.na(.), "0"))
