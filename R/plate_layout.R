@@ -11,12 +11,16 @@
 #' @import openxlsx
 
 
-plate_layout <- function(samples,proj,name_file,save_file_path){
+plate_layout <- function(samples,
+                         proj,
+                         name_file,
+                         save_file_path,
+                         starting_plate_number = 1){
 
 
 splitted_samples <- split(samples,ceiling(seq_along(samples)/88))
 nbplates <- round(length(samples)/88)
-plates_names <- c(paste0("PL",1:nbplates,"-",proj))
+plates_names <- c(paste0("PL",starting_plate_number:(starting_plate_number+nbplates-1),"-",proj))
 
 
 master_plan <- NULL
