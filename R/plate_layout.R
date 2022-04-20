@@ -57,16 +57,10 @@ for(i in 1:length(plates_names)){
 
 }
 
-
 # xtract cell pos in workbook
 your_file <- paste0(save_file_path, '/',name_file,'.xlsx')
 openxlsx::write.xlsx(as.data.frame(master_plan),file = your_file,sheetName = "plate_plan",colNames = F,rowNames = F)
 wb <- openxlsx::loadWorkbook(file = your_file)
-
-
-# sheets <- xlsx::getSheets(wb)
-# cells <- xlsx::getCells(xlsx::getRows(sheet=sheets[[1]],rowIndex = 1:length(master_plan)))
-# values <- lapply(cells,xlsx::getCellValue)
 
 # create formating style according to control type
 cstag <- openxlsx::createStyle(bgFill = "#9fc5e8")
@@ -103,7 +97,5 @@ openxlsx::conditionalFormatting(wb,
                                 style = csext,
                                 rule = "EXT",
                                 type = "contains")
-
-
 openxlsx::saveWorkbook(wb, your_file, overwrite = T)
 }
