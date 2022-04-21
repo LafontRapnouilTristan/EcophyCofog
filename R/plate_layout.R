@@ -4,7 +4,7 @@
 #' @param proj name of your porject to name your plates as : "proj-PLx"
 #' @param name_file a name to your output file
 #' @param save_file_path  path to where you want to save the excel output
-#'
+#' @param starting_plate_number where from start plate numbering
 #'
 #' @return an xlsx workbook with you plate plan
 #' @export

@@ -4,7 +4,13 @@
 \alias{plate_layout}
 \title{plate_layout}
 \usage{
-plate_layout(samples, proj, name_file, save_file_path)
+plate_layout(
+  samples,
+  proj,
+  name_file,
+  save_file_path,
+  starting_plate_number = 1
+)
 }
 \arguments{
 \item{samples}{a vector containing all your samples ID, they will fill the plate in the order they are in this vector}
@@ -14,6 +20,8 @@ plate_layout(samples, proj, name_file, save_file_path)
 \item{name_file}{a name to your output file}
 
 \item{save_file_path}{path to where you want to save the excel output}
+
+\item{starting_plate_number}{where from start plate numbering}
 }
 \value{
 an xlsx workbook with you plate plan
