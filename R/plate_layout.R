@@ -29,7 +29,7 @@ for(i in 1:length(plates_names)){
   plate <- matrix(nrow=8,ncol=12,0)
 
   #fill diags with control
-  if(i %% 2 ==0 && length(samples)>82){
+  if(i %% 2 ==0 && length(length(samples))>82){
     plate[1,1] <- plate[2,2] <- plate[3,3] <- plate[4,4] <- plate[5,5] <- "PCR-tags"
     plate[6,6] <- "PCR-T+"
   }
