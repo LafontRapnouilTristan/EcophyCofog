@@ -29,21 +29,29 @@ for(i in 1:length(plates_names)){
   plate <- matrix(nrow=8,ncol=12,0)
 
   #fill diags with control
-  if(i %% 2 ==0 && length(length(samples))>82){
-    plate[1,1] <- plate[2,2] <- plate[3,3] <- plate[4,4] <- plate[5,5] <- "PCR-tags"
-    plate[6,6] <- "PCR-T+"
+  if(i %% 2 ==0 | length(samples)<82 ){
+    plate[1,1] <- paste0("PCR-tags_",(i*5)-4)
+    plate[2,2] <- paste0("PCR-tags_",(i*5)-3)
+    plate[3,3] <- paste0("PCR-tags_",(i*5)-2)
+    plate[4,4] <- paste0("PCR-tags_",(i*5)-1)
+    plate[5,5] <- paste0("PCR-tags_",(i*5))
+    plate[6,6] <- paste0("PCR-T+_",i)
   }
-  else{
-    plate[5,8] <- plate[4,9] <- plate[3,10] <- plate[2,11] <- plate[1,12] <- "PCR-tags"
-    plate[6,7] <- "PCR-T+"
+  else {
+    plate[5,8] <- paste0("PCR-tags_",(i*5)-4)
+    plate[4,9] <- paste0("PCR-tags_",(i*5)-3)
+    plate[3,10] <- paste0("PCR-tags_",(i*5)-2)
+    plate[2,11] <- paste0("PCR-tags_",(i*5)-1)
+    plate[1,12] <- paste0("PCR-T+_",i)
+    plate[6,7] <- paste0("PCR-T+_",i)
   }
 
 
 
   #select random placement for CTAB and Xtraction control
-  CT_XT_position <- sample(which(plate[,1:12]==0L),2,replace=F)
-  plate[CT_XT_position[1]] <- "CTAB"
-  plate[CT_XT_position[2]] <- "EXT"
+  CT_XT_position <- sample(which(plate[1:(length(samples)+6)]==0L),2,replace=F)
+  plate[CT_XT_position[1]] <- paste0("CTAB_",i)
+  plate[CT_XT_position[2]] <- paste0("EXT_",i)
 
   #fill all 0 with samples ID
   ech_ID <- as.vector(splitted_samples[[i]])
