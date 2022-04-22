@@ -18,6 +18,8 @@ plate_layout <- function(samples,
                          starting_plate_number = 1){
 
 
+
+
 splitted_samples <- split(samples,ceiling(seq_along(samples)/88))
 nbplates <- round(length(samples)/88)
 plates_names <- c(paste0("PL",starting_plate_number:(starting_plate_number+nbplates-1),"-",proj))
@@ -67,8 +69,8 @@ for(i in 1:length(plates_names)){
 
 # xtract cell pos in workbook
 your_file <- paste0(save_file_path, '/',name_file,'.xlsx')
-openxlsx::write.xlsx(as.data.frame(master_plan),file = your_file,sheetName = "plate_plan",colNames = F,rowNames = F)
-wb <- openxlsx::loadWorkbook(file = your_file)
+wb <- openxlsx::buildWorkbook(as.data.frame(master_plan))
+
 
 # create formating style according to control type
 cstag <- openxlsx::createStyle(bgFill = "#9fc5e8")
@@ -105,5 +107,19 @@ openxlsx::conditionalFormatting(wb,
                                 style = csext,
                                 rule = "EXT",
                                 type = "contains")
+
+
+#create a style to apply to all non empty cells
+csglobal<- openxlsx::createStyle(border = "TopBottomLeftRight ",halign = "center")
+
+#apply it
+openxlsx::conditionalFormatting(wb,
+                                sheet = 1,
+                                cols = 1:ncol(master_plan),
+                                rows = 1:nrow(master_plan),
+                                style = csglobal,
+                                rule = '<>""',
+                                type = "expression")
+
 openxlsx::saveWorkbook(wb, your_file, overwrite = T)
 }
