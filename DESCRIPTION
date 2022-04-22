@@ -27,4 +27,5 @@ Imports: magrittr,
          tibble,
          hms,
          stringr,
-         openxlsx
+         openxlsx,
+         rlist
