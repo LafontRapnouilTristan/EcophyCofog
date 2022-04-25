@@ -1,7 +1,7 @@
 #' plate_layout
 #'
 #' @param samples a vector containing all your samples ID, they will fill the plate in the order they are in this vector
-#' @param proj name of your porject to name your plates as : "proj-PLx"
+#' @param proj name of your project to name your plates as : "proj-PLx"
 #' @param name_file a name to your output file
 #' @param save_file_path  path to where you want to save the excel output
 #' @param starting_plate_number where from start plate numbering
@@ -69,7 +69,7 @@ for(i in 1:length(plates_names)){
 
 # xtract cell pos in workbook
 your_file <- paste0(save_file_path, '/',name_file,'.xlsx')
-wb <- openxlsx::buildWorkbook(as.data.frame(master_plan))
+wb <- openxlsx::buildWorkbook(as.data.frame(master_plan[3:nrow(master_plan),]),colNames=F,rowNames=F)
 
 
 # create formating style according to control type
