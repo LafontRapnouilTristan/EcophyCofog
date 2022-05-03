@@ -21,7 +21,7 @@ plate_layout <- function(samples,
 
 
 splitted_samples <- split(samples,ceiling(seq_along(samples)/88))
-nbplates <- round(length(samples)/88)
+nbplates <- ceiling(length(samples)/88)
 plates_names <- c(paste0("PL",starting_plate_number:(starting_plate_number+nbplates-1),"-",proj))
 
 
@@ -31,7 +31,7 @@ for(i in 1:length(plates_names)){
   plate <- matrix(nrow=8,ncol=12,0)
 
   #fill diags with control
-  if(i %% 2 ==0 | length(samples)<82 ){
+  if(i %% 2 ==0 | length(splitted_samples[[i]])<82 ){
     plate[1,1] <- paste0("PCR-tags_",(i*5)-4)
     plate[2,2] <- paste0("PCR-tags_",(i*5)-3)
     plate[3,3] <- paste0("PCR-tags_",(i*5)-2)
@@ -44,7 +44,7 @@ for(i in 1:length(plates_names)){
     plate[4,9] <- paste0("PCR-tags_",(i*5)-3)
     plate[3,10] <- paste0("PCR-tags_",(i*5)-2)
     plate[2,11] <- paste0("PCR-tags_",(i*5)-1)
-    plate[1,12] <- paste0("PCR-T+_",i)
+    plate[1,12] <- paste0("PCR-tags_",(i*5))
     plate[6,7] <- paste0("PCR-T+_",i)
   }
 
