@@ -15,7 +15,7 @@ plate_layout(
 \arguments{
 \item{samples}{a vector containing all your samples ID, they will fill the plate in the order they are in this vector}
 
-\item{proj}{name of your porject to name your plates as : "proj-PLx"}
+\item{proj}{name of your project to name your plates as : "proj-PLx"}
 
 \item{name_file}{a name to your output file}
 

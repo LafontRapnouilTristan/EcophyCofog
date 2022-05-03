@@ -51,7 +51,7 @@ for(i in 1:length(plates_names)){
 
 
   #select random placement for CTAB and Xtraction control
-  CT_XT_position <- sample(which(plate[1:(length(samples)+6)]==0L),2,replace=F)
+  CT_XT_position <- sample(which(plate[1:(length(splitted_samples[[i]])+6)]==0L),2,replace=F)
   plate[CT_XT_position[1]] <- paste0("CTAB_",i)
   plate[CT_XT_position[2]] <- paste0("EXT_",i)
 
@@ -118,7 +118,7 @@ openxlsx::conditionalFormatting(wb,
                                 cols = 1:ncol(master_plan),
                                 rows = 1:nrow(master_plan),
                                 style = csglobal,
-                                rule = '<>""',
+                                rule = '<>" "',
                                 type = "expression")
 
 openxlsx::saveWorkbook(wb, your_file, overwrite = T)
