@@ -1,6 +1,7 @@
 #' plate_layout
 #'
-#' @param samples a vector containing all your samples ID, they will fill the plate in the order they are in this vector
+#' @param samples a vector containing all your samples ID, they will fill the plate in the order they are in this vector,
+#' when having replicates for one sample, plz index them as "SampleName 1" to "SampleName N" and not "SampleName_X" or "SampleName.X".
 #' @param proj name of your project to name your plates as : "proj-PLx"
 #' @param name_file a name to your output file
 #' @param save_file_path  path to where you want to save the excel output
@@ -26,34 +27,34 @@ plates_names <- c(paste0("PL",starting_plate_number:(starting_plate_number+nbpla
 
 
 master_plan <- NULL
-two_empty_rows <- matrix(nrow=2,ncol=13," ")
+two_empty_rows <- matrix(nrow=2,ncol=13,"")
 for(i in 1:length(plates_names)){
   plate <- matrix(nrow=8,ncol=12,0)
 
   #fill diags with control
   if(i %% 2 ==0 | length(splitted_samples[[i]])<82 ){
-    plate[1,1] <- paste0("PCR-tags_",(i*5)-4)
-    plate[2,2] <- paste0("PCR-tags_",(i*5)-3)
-    plate[3,3] <- paste0("PCR-tags_",(i*5)-2)
-    plate[4,4] <- paste0("PCR-tags_",(i*5)-1)
-    plate[5,5] <- paste0("PCR-tags_",(i*5))
-    plate[6,6] <- paste0("PCR-T+_",i)
+    plate[1,1] <- paste0("PCR-tags_",(starting_plate_number+i*5)-5)
+    plate[2,2] <- paste0("PCR-tags_",(starting_plate_number+i*5)-4)
+    plate[3,3] <- paste0("PCR-tags_",(starting_plate_number+i*5)-3)
+    plate[4,4] <- paste0("PCR-tags_",(starting_plate_number+i*5)-2)
+    plate[5,5] <- paste0("PCR-tags_",(starting_plate_number+i*5)-1)
+    plate[6,6] <- paste0("PCR-T+_",starting_plate_number+i-1)
   }
   else {
-    plate[5,8] <- paste0("PCR-tags_",(i*5)-4)
-    plate[4,9] <- paste0("PCR-tags_",(i*5)-3)
-    plate[3,10] <- paste0("PCR-tags_",(i*5)-2)
-    plate[2,11] <- paste0("PCR-tags_",(i*5)-1)
-    plate[1,12] <- paste0("PCR-tags_",(i*5))
-    plate[6,7] <- paste0("PCR-T+_",i)
+    plate[5,8] <- paste0("PCR-tags_",(starting_plate_number+i*5)-5)
+    plate[4,9] <- paste0("PCR-tags_",(starting_plate_number+i*5)-4)
+    plate[3,10] <- paste0("PCR-tags_",(starting_plate_number+i*5)-3)
+    plate[2,11] <- paste0("PCR-tags_",(starting_plate_number+i*5)-2)
+    plate[1,12] <- paste0("PCR-tags_",(starting_plate_number+i*5)-1)
+    plate[6,7] <- paste0("PCR-T+_",starting_plate_number+i-1)
   }
 
 
 
   #select random placement for CTAB and Xtraction control
   CT_XT_position <- sample(which(plate[1:(length(splitted_samples[[i]])+6)]==0L),2,replace=F)
-  plate[CT_XT_position[1]] <- paste0("CTAB_",i)
-  plate[CT_XT_position[2]] <- paste0("EXT_",i)
+  plate[CT_XT_position[1]] <- paste0("CTAB_",starting_plate_number+i)
+  plate[CT_XT_position[2]] <- paste0("EXT_",starting_plate_number+i)
 
   #fill all 0 with samples ID
   ech_ID <- as.vector(splitted_samples[[i]])
@@ -62,7 +63,7 @@ for(i in 1:length(plates_names)){
   #names columns
   plate <- rbind(1:12,plate)
   plate <- cbind(c(plates_names[i],LETTERS[1:8]),plate)
-  plate[which(plate==0)] <- " "
+  plate[which(plate==0)] <- ""
   master_plan <- rbind(master_plan,two_empty_rows,plate)
 
 }
@@ -118,7 +119,7 @@ openxlsx::conditionalFormatting(wb,
                                 cols = 1:ncol(master_plan),
                                 rows = 1:nrow(master_plan),
                                 style = csglobal,
-                                rule = '<>" "',
+                                rule = 'OR(<>" ",<>""',
                                 type = "expression")
 
 openxlsx::saveWorkbook(wb, your_file, overwrite = T)
