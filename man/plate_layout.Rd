@@ -13,7 +13,8 @@ plate_layout(
 )
 }
 \arguments{
-\item{samples}{a vector containing all your samples ID, they will fill the plate in the order they are in this vector}
+\item{samples}{a vector containing all your samples ID, they will fill the plate in the order they are in this vector,
+when having replicates for one sample, plz index them as "SampleName 1" to "SampleName N" and not "SampleName_X" or "SampleName.X".}
 
 \item{proj}{name of your project to name your plates as : "proj-PLx"}
 
