@@ -42,9 +42,8 @@ tag_layout <- function(tag_list,
 
   # create and store tag pairz
   tag_pair_list <- NULL
-  plates_names <- paste0("PL-",1:nb_possible_plates)
+  plates_names <- paste0("PL-",nb_possible_plates)
   for (i in 1:nb_possible_plates){
-    plate <- matrix(nrow = 8,ncol = 12,0) # draw the plate
 
     j <- rep(1:(nrow(row_tags)/8),nrow(col_tags)/12)
     k <- c(rep(1:(nrow(col_tags)/12),each=(nrow(row_tags)/8)))
@@ -64,8 +63,6 @@ tag_layout <- function(tag_list,
     x1 <- rep(row_tags_seq, times=length(col_tags_seq))
     y1 <- rep(col_tags_seq, each=length(row_tags_seq))
     pair_tag_seq <- paste0(x1,":",y1)
-
-
 
     tag_pair <- cbind(rep(plates_names[i],length(col_tags_seq)),pair_tag_name,pair_tag_seq)
     tag_pair_list <- rbind(tag_pair_list,tag_pair)
@@ -108,13 +105,11 @@ tag_layout <- function(tag_list,
 
   # get samples position
 
-  sample_pos <- which(tag_PCR_plates %in% na.omit(corresp_tag)$samples) #samples are cells with a correspondance in corresp_tag
-  sample_pos <- sample_pos[!sample_pos %in% which(0:(length(tag_PCR_plates)-1)%%9==0)]
+  sample_pos <- which(tag_PCR_plates %in% na.omit(corresp_tag)$samples) # samples are cells with a correspondance in corresp_tag
+  sample_pos <- sample_pos[!sample_pos %in% which(0:(length(tag_PCR_plates)-1)%%9==0)] # remove colnames of each plates from possible positions
   for(i in sample_pos){
     tag_PCR_plates[i] <- corresp_tag$pair_tag_name[match(tag_PCR_plates[i],corresp_tag$samples)] # for these cells, get the tag_pair
   }
-
-  tag_PCR_plates <- as.data.frame(unname(tag_PCR_plates))
 
   # create a xlsx workbook
   wb <- openxlsx::buildWorkbook(tag_PCR_plates,rownames = F,colNames=F)
