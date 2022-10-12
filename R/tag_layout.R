@@ -1,7 +1,7 @@
 #' tag_layout
 #'
 #' @param tag_list a dataframe with 3 column : 'tag_name' (e.g. f1 to fx and r1 to rx), 'tag_sequence' (e.g. ACACACAC) and 'tag_type' (i.e. forward or reverse)
-#' @param PCR_plates a matrix object representing your plates map/layout, output of "plate_layout" function of this package.
+#' @param PCR_plates a matrix object representing your plates map/layout, output of "plate_layout" function of this package. MAKE SURE that ALL empty cells are filled with NA when importing to R
 #' @param output_path path to an output folder that will receive to new files
 #' @param file_corresp_tag name of the sample-tagpairs correspondance dataframe
 #' @param file_tag_layout name of your xlsx output, having the map of your tagz.
@@ -42,7 +42,7 @@ tag_layout <- function(tag_list,
 
   # create and store tag pairz
   tag_pair_list <- NULL
-  plates_names <- paste0("PL-",nb_possible_plates)
+  plates_names <- paste0("PL-",1:nb_possible_plates)
   for (i in 1:nb_possible_plates){
 
     j <- rep(1:(nrow(row_tags)/8),nrow(col_tags)/12)
